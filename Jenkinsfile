@@ -2,6 +2,7 @@ pipeline {
 
   environment {
     registry = "lindison/myweb"
+    registryCredential = 'dockerhub_id'
     dockerImage = ""
   }
 
