@@ -13,7 +13,7 @@ pipeline {
     stage('Deploy App') {
       steps {
         script {
-          kubernetesDeploy(configs: "kubernetes-manifests.yaml", kubeconfigId: "jenkinskubefile")
+          sh "/usr/local/bin/kubectl apply -f $WORKSPACE/kubernetes-manifests.yaml"
         }
       }
     }
