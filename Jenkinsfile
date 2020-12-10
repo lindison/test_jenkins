@@ -26,10 +26,16 @@ pipeline {
     stage('Push Image') {
       steps{
         script {
-          docker.withRegistry( "" ) {
+          docker.withRegistry( '', registryCredential ) {
             dockerImage.push()
           }
         }
+      }
+    }
+
+    state ('Cleaning up') {
+      steps {
+        sh "docker rmi $registry:$BUILD_NUMBER"
       }
     }
 
