@@ -1,7 +1,7 @@
 pipeline {
 
   environment {
-    registry = "hub.docker.com/repository/lindison/myweb"
+    registry = "lindison/myweb"
     dockerImage = ""
   }
 
