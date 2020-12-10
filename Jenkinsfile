@@ -1,23 +1,40 @@
-pipeline {
+pipeline { 
 
-  agent any
-
-  stages {
-
-    stage('Checkout Source') {
-      steps {
-        git 'https://github.com/lindison/test_jenkins.git'
-      }
+    environment { 
+        registry = "lindison/myweb" 
+        registryCredential = 'dockerhub_id' 
+        dockerImage = '' 
     }
+    agent any 
 
-    stage('Deploy App') {
-      steps {
-        script {
-          kubernetesDeploy(configs: "$WORKSPACE/kubernetes-manifests.yaml", kubeconfigId: "jenkinskubefile")
+    stages { 
+        stage('Cloning our Git') { 
+            steps { 
+                git 'https://github.com/lindison/test_jenkins' 
+            }
+        } 
+
+        stage('Building our image') { 
+            steps { 
+                script { 
+                    dockerImage = docker.build registry + ":$BUILD_NUMBER" 
+                }
+            } 
         }
-      }
+
+        stage('Deploy our image') { 
+            steps { 
+                script { 
+                    docker.withRegistry( '', registryCredential ) { 
+                        dockerImage.push() 
+                    }
+                } 
+            }
+        } 
+        stage('Cleaning up') { 
+            steps { 
+                sh "docker rmi $registry:$BUILD_NUMBER" 
+            }
+        } 
     }
-
-  }
-
 }
