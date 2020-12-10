@@ -10,7 +10,7 @@ pipeline {
     stages { 
         stage('Cloning our Git') { 
             steps { 
-                git 'https://github.com/lindison/test_jenkins' 
+                git 'https://github.com/lindison/test_jenkins.git' 
             }
         } 
 
@@ -31,6 +31,7 @@ pipeline {
                 } 
             }
         } 
+
         stage('Cleaning up') { 
             steps { 
                 sh "docker rmi $registry:$BUILD_NUMBER" 
