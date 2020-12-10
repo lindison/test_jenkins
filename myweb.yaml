@@ -16,7 +16,7 @@ spec:
         app: myweb
     spec:
       containers:
-      - image: lindison/myweb:latest
+      - image: lindison/myweb:$BUILD_NUMBER
         imagePullPolicy: Always
         name: myweb
 
