@@ -43,7 +43,7 @@ pipeline {
     stage('Deploy App') {
       steps {
         script {
-          sh "kubectl apply -f $WORKSPACE/myweb.yaml"
+          kubernetesDeploy(configs: "$WORKSPACE/hellowhale.yaml", kubeconfigId: "jenkinskubefile")
         }
       }
     }
