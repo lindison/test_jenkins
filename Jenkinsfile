@@ -1,11 +1,5 @@
 pipeline {
 
-  environment {
-    registry = "lindison/myweb"
-    registryCredential = 'dockerhub_id'
-    dockerImage = ""
-  }
-
   agent any
 
   stages {
@@ -16,34 +10,10 @@ pipeline {
       }
     }
 
-    stage('Build image') {
-      steps{
-        script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
-        }
-      }
-    }
-
-    stage('Push Image') {
-      steps{
-        script {
-          docker.withRegistry( '', registryCredential ) {
-            dockerImage.push()
-          }
-        }
-      }
-    }
-
-    stage('Cleaning up') {
-      steps {
-        sh "docker rmi $registry:$BUILD_NUMBER"
-      }
-    }
-
     stage('Deploy App') {
       steps {
         script {
-          kubernetesDeploy(configs: "$WORKSPACE/myweb.yaml", kubeconfigId: "jenkinskubefile")
+          kubernetesDeploy(configs: "$WORKSPACE/kubernetes-manifests.yaml", kubeconfigId: "jenkinskubefile")
         }
       }
     }
